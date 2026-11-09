@@ -5,6 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Brand teal, sampled from public/assets/Wanderlast.png */
+  --color-brand: #15a1bf;
+  /* Pale blue section background used behind the "Why Choose" cards */
+  --color-brand-50: #e5f4fa;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);

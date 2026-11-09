@@ -1,9 +1,15 @@
-import Image from "next/image";
+import { Banner } from "@/components/banner";
+import { Navbar } from "@/components/navbar";
+import { Testimonials } from "@/components/testimonials";
+import { WhyChoose } from "@/components/why-choose";
 
 export default function Home() {
   return (
-    <div>
-      
-    </div>
+    <main className="flex min-h-svh flex-col">
+      <Navbar />
+      <Banner />
+      <WhyChoose />
+      <Testimonials />
+    </main>
   );
 }
