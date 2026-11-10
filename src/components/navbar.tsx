@@ -22,8 +22,8 @@ type NavLinkItem = {
 const navLinks: NavLinkItem[] = [
   { label: "Home", href: "/", active: true },
   { label: "Destinations", href: "/destinations" },
+  { label: "Add Destination", href: "/add-destination" },
   { label: "My Bookings", href: "/my-bookings" },
-  { label: "Admin", href: "/admin" },
 ];
 
 const accountLinks: NavLinkItem[] = [
