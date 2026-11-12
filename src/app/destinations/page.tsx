@@ -1,4 +1,4 @@
-import { DestinationsBrowser } from "@/components/destinations-browser";
+import { DestinationsBrowser } from "@/components/destination/destinations-browser";
 import { getDestinations } from "@/lib/destinations";
 
 /**

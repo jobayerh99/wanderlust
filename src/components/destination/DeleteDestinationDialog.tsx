@@ -1,3 +1,5 @@
+'use client'
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -9,15 +11,29 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
+import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-const DeleteDestinationDialog = () => {
+const DeleteDestinationDialog = ({id} : {id:string}) => {
+    const router = useRouter();
+
+    const handleDeleteDestination = async () => {
+        const res = await fetch(`http://localhost:8000/destination/${id}`, {
+            method: 'DELETE',
+        })
+        await res.json()
+        router.push('/destinations');
+            router.refresh();
+    }
+
     return (
         <AlertDialog>
             <AlertDialogTrigger render={<Button variant="outline"
             className={"border-destructive/30 bg-background text-destructive hover:bg-destructive/50"}
             />}>
-                Show Dialog
+                <Trash2/>
+                Delete
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -29,7 +45,7 @@ const DeleteDestinationDialog = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Continue</AlertDialogAction>
+                    <AlertDialogAction onClick={handleDeleteDestination}>Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

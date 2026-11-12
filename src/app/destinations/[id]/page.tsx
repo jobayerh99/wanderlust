@@ -13,12 +13,11 @@ import {
   Tag,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import EditDestinationDialoge from "@/components/EditDestinationDialoge";
-import DeleteDestinationDialog from "@/components/DeleteDestinationDialog";
+import EditDestinationDialoge from "@/components/destination/EditDestinationDialoge";
+import DeleteDestinationDialog from "@/components/destination/DeleteDestinationDialog";
 
 interface Destination {
   _id: string;
@@ -79,7 +78,7 @@ const DestinationDetails = async ({
 
             <EditDestinationDialoge destination={destination} />
 
-            <DeleteDestinationDialog />
+            <DeleteDestinationDialog id={id} />
             
           </div>
         </div>
