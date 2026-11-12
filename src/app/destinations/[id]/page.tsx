@@ -6,7 +6,6 @@ import {
   ArrowRight,
   CalendarDays,
   Check,
-  Edit,
   MapPin,
   ShieldCheck,
   Headphones,
@@ -18,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import EditDestinationDialoge from "@/components/EditDestinationDialoge";
+import DeleteDestinationDialog from "@/components/DeleteDestinationDialog";
 
 interface Destination {
   _id: string;
@@ -75,20 +76,11 @@ const DestinationDetails = async ({
           </Link>
 
           <div className="flex gap-2">
-            <Link
-              href={`/destinations/${id}/edit`}
-              className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-                <Edit size={14} />
-                Edit
-            </Link>
 
-            <Link
-              href="/destinations"
-              className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md border border-red-200 bg-background px-3 text-sm font-medium text-red-500 shadow-sm transition-colors hover:bg-red-50 hover:text-red-600"
-            >
-                Cancel
-            </Link>
+            <EditDestinationDialoge destination={destination} />
+
+            <DeleteDestinationDialog />
+            
           </div>
         </div>
 
