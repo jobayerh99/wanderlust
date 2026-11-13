@@ -11,6 +11,7 @@ import {
     ShieldCheck,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
@@ -27,7 +28,13 @@ interface Destination {
     description: string;
 }
 
-interface BookingData extends Destination {
+interface BookingData extends Omit<Destination, "_id"> {
+    /**
+     * Reference back to the destination. Never reuse the destination's `_id`
+     * for the booking document — MongoDB would reject the second booking of
+     * the same destination with an E11000 duplicate key error.
+     */
+    destinationId: string;
     userName?: string;
     email?: string;
     image?: string | null;
@@ -51,6 +58,12 @@ const BookingPage = ({
             : date.toISOString().split("T")[0];
     });
 
+    const [submitting, setSubmitting] = useState(false);
+    const [feedback, setFeedback] = useState<{
+        type: "error" | "success";
+        text: string;
+    } | null>(null);
+
     const today = new Date().toISOString().split("T")[0];
     const router = useRouter();
 
@@ -60,28 +73,74 @@ const BookingPage = ({
     const handleBooking = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const departureDate = (e.target as HTMLFormElement & {
+        const departureDate = (e.currentTarget as HTMLFormElement & {
             departureDate: HTMLInputElement;
         }).departureDate.value
-        
+
+        setSubmitting(true);
+        setFeedback(null);
+
+        // Split the destination id out so the booking document gets its own
+        // Mongo-generated `_id` instead of colliding with the destination's.
+        const { _id: destinationId, ...destinationFields } = destination;
+
         const data: BookingData = {
             userName: user?.name,
             email: user?.email,
             image: user?.image,
-            ...destination,
+            ...destinationFields,
+            destinationId,
             departureDate: departureDate,
             bookingDate: new Date()
         }
-        
-        const res = await fetch('http://localhost:8000/booking', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        const bookingRes = await res.json()
-        console.log(bookingRes);
+
+        try {
+            const res = await fetch('http://localhost:8000/booking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+
+            // Failures may come back as Express' HTML error page, so read the
+            // body as text first and only parse it when it really is JSON.
+            const text = await res.text();
+            let body: unknown = null;
+            if (text) {
+                try {
+                    body = JSON.parse(text);
+                } catch {
+                    // Non-JSON response (e.g. an HTML error page).
+                }
+            }
+
+            if (!res.ok) {
+                const message =
+                    body &&
+                    typeof body === "object" &&
+                    "message" in body &&
+                    typeof (body as { message: unknown }).message === "string"
+                        ? (body as { message: string }).message
+                        : `Booking failed (HTTP ${res.status})`;
+                throw new Error(message);
+            }
+
+            setFeedback({
+                type: "success",
+                text: "Booking confirmed!",
+            });
+        } catch (err) {
+            setFeedback({
+                type: "error",
+                text:
+                    err instanceof Error
+                        ? err.message
+                        : "Booking failed. Please try again.",
+            });
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -139,7 +198,11 @@ const BookingPage = ({
                         {/* Booking Button */}
                         <Button
                             type="submit"
-                            disabled={!departureDate || departureDate < today}
+                            disabled={
+                                !departureDate ||
+                                departureDate < today ||
+                                submitting
+                            }
                             // onClick={() =>
                             //     router.push(
                             //         `/destinations/${id}/booking?departureDate=${departureDate}`,
@@ -147,9 +210,34 @@ const BookingPage = ({
                             // }
                             className="h-11 w-full bg-cyan-600 text-sm font-medium text-white hover:bg-cyan-700"
                         >
-                            Book Now
+                            {submitting ? "Booking..." : "Book Now"}
                             <ArrowRight size={16} />
                         </Button>
+
+                        {feedback ? (
+                            <p
+                                role="status"
+                                className={
+                                    feedback.type === "error"
+                                        ? "mt-2 text-xs text-destructive"
+                                        : "mt-2 text-xs text-green-600"
+                                }
+                            >
+                                {feedback.type === "success" ? (
+                                    <>
+                                        {feedback.text}{" "}
+                                        <Link
+                                            href="/my-bookings"
+                                            className="font-medium underline underline-offset-2"
+                                        >
+                                            View my bookings
+                                        </Link>
+                                    </>
+                                ) : (
+                                    feedback.text
+                                )}
+                            </p>
+                        ) : null}
                     </form>
 
                     {/* Benefits */}
