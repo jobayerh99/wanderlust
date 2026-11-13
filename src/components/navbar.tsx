@@ -1,7 +1,18 @@
+'use client'
+
 import Image from "next/image";
 import Link from "next/link";
-import { MenuIcon, UserIcon, type LucideIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import { cn } from "cn";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 import {
   Sheet,
@@ -10,13 +21,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
+import { Button } from "./ui/button";
 
 type NavLinkItem = {
   label: string;
   href: string;
   /** Marks the link for the current page (mock shows Home active). */
   active?: boolean;
-  icon?: LucideIcon;
+  /** Only shown when there is no signed-in user. */
+  guestOnly?: boolean;
 };
 
 const navLinks: NavLinkItem[] = [
@@ -26,17 +40,16 @@ const navLinks: NavLinkItem[] = [
   { label: "My Bookings", href: "/my-bookings" },
 ];
 
+// The avatar popover doubles as the profile entry point, so no Profile link.
 const accountLinks: NavLinkItem[] = [
-  { label: "Profile", href: "/profile", icon: UserIcon },
-  { label: "Login", href: "/login" },
-  { label: "Sign Up", href: "/signup" },
+  { label: "Login", href: "/login", guestOnly: true },
+  { label: "Sign Up", href: "/signup", guestOnly: true },
 ];
 
 /** Shared tap-friendly styling for links inside the mobile sheet. */
 const sheetLinkClassName = "rounded-md px-3 py-2.5 text-base hover:bg-muted";
 
 function NavLink({ link, className }: { link: NavLinkItem; className?: string }) {
-  const Icon = link.icon;
   return (
     <Link
       href={link.href}
@@ -49,13 +62,25 @@ function NavLink({ link, className }: { link: NavLinkItem; className?: string })
         className,
       )}
     >
-      {Icon ? <Icon className="size-4" aria-hidden="true" /> : null}
       {link.label}
     </Link>
   );
 }
 
 export function Navbar() {
+
+  const { data: session } = authClient.useSession()
+  const user = session?.user;
+
+  // Guests see Login/Sign Up; signed-in users use the avatar popover instead.
+  const visibleAccountLinks = accountLinks.filter((link) =>
+    user ? !link.guestOnly : true,
+  );
+
+  const handleSignOut = () => {
+    authClient.signOut()
+  }
+
   return (
     <header className="grid h-20 shrink-0 grid-cols-[1fr_auto_1fr] items-center bg-background px-4 md:px-9">
       {/* Left slot: hamburger on mobile, inline nav on desktop */}
@@ -80,7 +105,7 @@ export function Navbar() {
                 />
               ))}
               <div className="my-2 border-t border-border" />
-              {accountLinks.map((link) => (
+              {visibleAccountLinks.map((link) => (
                 <NavLink
                   key={link.label}
                   link={link}
@@ -108,12 +133,32 @@ export function Navbar() {
         />
       </Link>
 
+
+
       {/* Right: account actions */}
       <nav
         className="hidden items-center justify-end gap-8 md:flex"
         aria-label="Account"
       >
-        {accountLinks.map((link) => (
+
+
+        {user ? (
+          <Popover>
+            <PopoverTrigger render={<Avatar>
+              <AvatarImage referrerPolicy="no-referrer" src={user.image as string} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>}>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverHeader>
+                <PopoverTitle>{user.name}</PopoverTitle>
+                <PopoverDescription>{user.email}</PopoverDescription>
+                <Button onClick={handleSignOut} variant={'destructive'}>Signout</Button>
+              </PopoverHeader>
+            </PopoverContent>
+          </Popover>
+        ) : null}
+        {visibleAccountLinks.map((link) => (
           <NavLink key={link.label} link={link} />
         ))}
       </nav>
