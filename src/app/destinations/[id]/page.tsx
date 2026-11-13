@@ -18,6 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import EditDestinationDialoge from "@/components/destination/EditDestinationDialoge";
 import DeleteDestinationDialog from "@/components/destination/DeleteDestinationDialog";
+import { Button } from "@/components/ui/button";
+import BookingPage from "@/components/booking/page";
 
 interface Destination {
   _id: string;
@@ -79,7 +81,7 @@ const DestinationDetails = async ({
             <EditDestinationDialoge destination={destination} />
 
             <DeleteDestinationDialog id={id} />
-            
+
           </div>
         </div>
 
@@ -219,89 +221,8 @@ const DestinationDetails = async ({
           </div>
 
           {/* Booking Sidebar */}
-          <aside>
-            <Card className="sticky top-6 rounded-lg border-gray-200 shadow-sm">
-              <CardContent className="space-y-5 p-5">
 
-                {/* Price */}
-                <div>
-                  <p className="text-xs text-gray-500">
-                    Starting from
-                  </p>
-
-                  <p className="mt-1 text-3xl font-bold text-cyan-600">
-                    ${Number(destination.price).toLocaleString("en-US")}
-                  </p>
-
-                  <p className="text-xs text-gray-500">
-                    per person
-                  </p>
-                </div>
-
-                <Separator />
-
-                {/* Departure Date */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-gray-600">
-                    Departure Date
-                  </label>
-
-                  <div className="flex h-11 items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 text-sm text-gray-700">
-                    <CalendarDays
-                      size={15}
-                      className="text-gray-400"
-                    />
-                    {formattedDate}
-                  </div>
-                </div>
-
-                {/* Booking Button */}
-                <Link
-                  href={`/destinations/${id}/booking`}
-                  className="flex h-11 w-full items-center justify-center gap-2 rounded-md bg-cyan-600 px-4 text-sm font-medium text-white hover:bg-cyan-700"
-                >
-                  Book Now
-                  <ArrowRight size={16} />
-                </Link>
-
-                {/* Benefits */}
-                <div className="space-y-3">
-
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <Check
-                      size={15}
-                      className="text-green-600"
-                    />
-                    Free cancellation up to 7 days
-                  </div>
-
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <ShieldCheck
-                      size={15}
-                      className="text-green-600"
-                    />
-                    Secure travel booking
-                  </div>
-
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <Headphones
-                      size={15}
-                      className="text-green-600"
-                    />
-                    24/7 customer support
-                  </div>
-
-                </div>
-
-                <Separator />
-
-                <p className="text-center text-xs text-gray-400">
-                  Your next adventure starts here!
-                </p>
-
-              </CardContent>
-            </Card>
-          </aside>
+          <BookingPage destination={destination} id={id}/>
 
         </div>
       </div>

@@ -144,16 +144,30 @@ export function Navbar() {
 
         {user ? (
           <Popover>
-            <PopoverTrigger render={<Avatar>
-              <AvatarImage referrerPolicy="no-referrer" src={user.image as string} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>}>
-            </PopoverTrigger>
+            <PopoverTrigger
+              render={
+                <button type="button" aria-label="Open account menu">
+                  <Avatar>
+                    <AvatarImage
+                      referrerPolicy="no-referrer"
+                      src={user.image as string}
+                    />
+                    <AvatarFallback>
+                      {user.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              }
+            />
+
             <PopoverContent>
               <PopoverHeader>
                 <PopoverTitle>{user.name}</PopoverTitle>
                 <PopoverDescription>{user.email}</PopoverDescription>
-                <Button onClick={handleSignOut} variant={'destructive'}>Signout</Button>
+
+                <Button onClick={handleSignOut} variant="destructive">
+                  Sign out
+                </Button>
               </PopoverHeader>
             </PopoverContent>
           </Popover>
