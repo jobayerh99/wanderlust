@@ -101,7 +101,7 @@ export function Footer() {
     <footer className="bg-neutral-950 px-6 pt-14 pb-7 text-white md:px-12">
       <div className="mx-auto max-w-6xl">
         {/* Brand statement */}
-        <p className="text-6xl leading-none font-bold tracking-tight md:text-8xl lg:text-9xl">
+        <p className="text-5xl leading-none font-bold tracking-tight sm:text-6xl md:text-8xl lg:text-9xl">
           Wanderlast
         </p>
         <p className="mt-4 text-sm text-white/60 md:text-base">

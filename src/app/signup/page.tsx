@@ -21,9 +21,12 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import React from "react"
 import { authClient } from "@/lib/auth-client"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 export default function SignUpPage() {
+
+    const router = useRouter()
 
     const handleEmailSignUp = async(e:React.SubmitEvent<HTMLElement>) => {
         e.preventDefault()
@@ -35,23 +38,27 @@ export default function SignUpPage() {
             ...user,
 
         })
-        if(data){
-            redirect("/")
+        if (error) {
+            toast.error("Sign up failed", {
+                description: error.message ?? "Please try again.",
+            })
+            return
         }
-        if(error){
-            console.log(error);
+
+        if (data) {
+            router.push("/")
         }
 
     }
 
     return (
-        <div className={cn("flex flex-col gap-6 max-w-6xl mx-auto my-10")}>
+        <div className={cn("mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 my-10")}>
 
-            <Card>
+            <Card className="mx-auto w-full max-w-md">
                 <CardHeader className="text-center">
                     <CardTitle className="text-xl">Welcome</CardTitle>
                     <CardDescription>
-                        Logup with your Apple or Google account
+                        Sign up with your Apple or Google account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -91,7 +98,7 @@ export default function SignUpPage() {
                                 />
                             </Field>
                             <Field>
-                                <FieldLabel htmlFor="name">Image URL</FieldLabel>
+                                <FieldLabel htmlFor="image">Image URL</FieldLabel>
                                 <Input
                                     id="image"
                                     type="url"
@@ -101,7 +108,7 @@ export default function SignUpPage() {
                                 />
                             </Field>
                             <Field>
-                                <FieldLabel htmlFor="name">EmailL</FieldLabel>
+                                <FieldLabel htmlFor="email">Email</FieldLabel>
                                 <Input
                                     id="email"
                                     type="email"

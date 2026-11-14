@@ -183,7 +183,7 @@ export function BookingCard({ booking, onCancel }: BookingCardProps) {
     booking.status?.trim().toLowerCase() === "cancelled";
 
   return (
-    <article className="flex flex-col gap-4 rounded-xl border border-border bg-background p-4 shadow-sm">
+    <article className="flex flex-col gap-4 rounded-xl border border-border bg-background p-4 shadow-sm sm:flex-row">
 
       {/* Cover image */}
       <div className="relative h-44 w-full shrink-0 overflow-hidden rounded-lg bg-muted sm:h-auto sm:min-h-32 sm:w-52">

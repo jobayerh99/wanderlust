@@ -86,7 +86,7 @@ export function Testimonials() {
           <CarouselContent className="mt-8">
             {testimonials.map(({ quote, name, location, image }) => (
               <CarouselItem key={name} className="md:basis-1/2">
-                <figure className="flex h-full gap-5 rounded-lg border p-5">
+                <figure className="flex h-full flex-col gap-4 rounded-lg border p-5 sm:flex-row sm:gap-5">
                   <div className="flex flex-1 flex-col">
                     <blockquote className="text-sm leading-snug">
                       {quote}
@@ -103,7 +103,7 @@ export function Testimonials() {
                     alt={name}
                     width={144}
                     height={144}
-                    className="w-36 shrink-0 self-stretch rounded-md object-cover"
+                    className="h-32 w-full shrink-0 rounded-md object-cover sm:h-auto sm:w-36 sm:self-stretch"
                   />
                 </figure>
               </CarouselItem>

@@ -159,20 +159,32 @@ const AddDestinationPage = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const res = await fetch("http://localhost:8000/add-destination", {
-        method:"POST",
-        headers: {
-            "Content-Type" : "application/json",
-        },
-        body: JSON.stringify(form)
-    })
-
-    const data = await res.json();
-    console.log(data);
-
+    // Validate first — never POST invalid data.
     const nextErrors = validate(form);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
+
+    try {
+      const res = await fetch("http://localhost:8000/add-destination", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    } catch (error) {
+      toast.add({
+        type: "error",
+        title: "Could not add travel package",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Please check the backend and try again.",
+      });
+      return;
+    }
 
     toast.add({
       type: "success",
@@ -190,12 +202,12 @@ const AddDestinationPage = () => {
 
   return (
     <main className="flex flex-1 flex-col px-4 py-10 md:px-8 md:py-14">
-      <div className="mx-auto w-full max-w-4xl">
+      <div className="mx-auto w-full max-w-6xl">
         <h1 className="text-4xl font-light md:text-4xl">
           Add New Travel Package
         </h1>
 
-        <Card className="mx-auto mt-10 w-full max-w-4xl [--card-spacing:0px]">
+        <Card className="mx-auto mt-10 w-full [--card-spacing:0px]">
           <form onSubmit={handleSubmit} noValidate className="flex flex-col">
             <CardContent className="flex flex-col gap-5 px-6 py-6">
               <FieldRow
@@ -367,7 +379,7 @@ const AddDestinationPage = () => {
               </FieldRow>
             </CardContent>
 
-            <CardFooter className="justify-end gap-3 border-t bg-background px-6 py-4">
+            <CardFooter className="flex flex-wrap justify-end gap-3 border-t bg-background px-6 py-4">
               <Button
                 type="button"
                 variant="outline"

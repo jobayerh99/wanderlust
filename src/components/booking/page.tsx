@@ -118,9 +118,9 @@ const BookingPage = ({
             if (!res.ok) {
                 const message =
                     body &&
-                    typeof body === "object" &&
-                    "message" in body &&
-                    typeof (body as { message: unknown }).message === "string"
+                        typeof body === "object" &&
+                        "message" in body &&
+                        typeof (body as { message: unknown }).message === "string"
                         ? (body as { message: string }).message
                         : `Booking failed (HTTP ${res.status})`;
                 throw new Error(message);

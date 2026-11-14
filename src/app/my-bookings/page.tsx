@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { headers } from "next/headers";
 
@@ -18,6 +19,7 @@ const MyBookingsPage = async () => {
         <main className="flex flex-1 flex-col px-4 py-10 md:px-8 md:py-14">
             <div className="mx-auto w-full max-w-6xl">
                 <h1 className="text-4xl font-light">My Bookings</h1>
+
                 <p className="mt-3 text-sm text-muted-foreground">
                     Manage and view your upcoming travel plans
                 </p>
@@ -27,7 +29,9 @@ const MyBookingsPage = async () => {
                         <p className="text-muted-foreground">
                             Log in to see your bookings.
                         </p>
+
                         <Button
+                            nativeButton={false}
                             render={<Link href="/login" />}
                             className="mt-4 bg-brand text-white hover:bg-brand/90"
                         >
@@ -39,7 +43,9 @@ const MyBookingsPage = async () => {
                         <p className="text-muted-foreground">
                             No trips booked yet.
                         </p>
+
                         <Button
+                            nativeButton={false}
                             render={<Link href="/destinations" />}
                             className="mt-4 bg-brand text-white hover:bg-brand/90"
                         >
