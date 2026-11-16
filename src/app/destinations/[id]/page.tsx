@@ -3,23 +3,19 @@ import { Suspense } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
-  ArrowRight,
   CalendarDays,
-  Check,
   MapPin,
-  ShieldCheck,
-  Headphones,
   Clock,
   Tag,
 } from "lucide-react";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import EditDestinationDialoge from "@/components/destination/EditDestinationDialoge";
 import DeleteDestinationDialog from "@/components/destination/DeleteDestinationDialog";
-import { Button } from "@/components/ui/button";
 import BookingPage from "@/components/booking/page";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface Destination {
   _id: string;
@@ -38,9 +34,19 @@ const DestinationDetails = async ({
 }: {
   id: string;
 }) => {
+
+  const jwtToken = await auth.api.getToken({
+    headers: await headers()
+  })
+
+  const token = jwtToken?.token
+
   const res = await fetch(
     `http://localhost:8000/destination/${id}`,
     {
+      headers:{
+        authorization : `Bearer ${token}`
+      },
       cache: "no-store",
     }
   );
