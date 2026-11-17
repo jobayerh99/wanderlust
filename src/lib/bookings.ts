@@ -22,7 +22,7 @@ export async function getBookings(email?: string): Promise<Booking[]> {
 
   try {
     const res = await fetch(
-      `http://localhost:8000/my-bookings/${encodeURIComponent(email)}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/my-bookings/${encodeURIComponent(email)}`,
       { cache: "no-store" },
     );
     if (!res.ok) return [];

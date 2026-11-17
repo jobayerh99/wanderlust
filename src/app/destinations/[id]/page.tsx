@@ -39,10 +39,10 @@ const DestinationDetails = async ({
   const token = await getTokenFromServer()
 
   const res = await fetch(
-    `http://localhost:8000/destination/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/destination/${id}`,
     {
-      headers:{
-        authorization : `Bearer ${token}`
+      headers: {
+        authorization: `Bearer ${token}`
       },
       cache: "no-store",
     }
@@ -225,7 +225,7 @@ const DestinationDetails = async ({
 
           {/* Booking Sidebar */}
 
-          <BookingPage destination={destination} id={id}/>
+          <BookingPage destination={destination} id={id} />
 
         </div>
       </div>

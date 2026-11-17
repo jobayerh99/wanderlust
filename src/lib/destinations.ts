@@ -10,7 +10,7 @@ export type Destination = {
   description: string;
 };
 
-const API_URL = "http://localhost:8000/destinations";
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/destinations`;
 
 /** Fetch every destination from the backend. Never throws — returns [] on failure. */
 export async function getDestinations(): Promise<Destination[]> {

@@ -23,7 +23,7 @@ const DeleteDestinationDialog = ({ id }: { id: string }) => {
 
         const token = await getTokenFromClient()
 
-        const res = await fetch(`http://localhost:8000/destination/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/destination/${id}`, {
             method: 'DELETE',
             headers: {
                 authorization: `Bearer ${token}`

@@ -20,7 +20,7 @@ import type { Booking } from "@/lib/bookings";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getTokenFromServer } from "@/lib/getTokenFromServer";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 type StatusMeta = {
   label: string;
@@ -114,13 +114,13 @@ export function BookingCard({ booking, onCancel }: BookingCardProps) {
   /* Cancel Booking */
   const handleCancelBooking = async () => {
 
-    const token = await getTokenFromServer()
+    const token = await getTokenFromClient()
 
     try {
       setIsCancelling(true);
 
       const res = await fetch(
-        `http://localhost:8000/mybookings/${booking._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/mybookings/${booking._id}`,
         {
           method: "DELETE",
           headers: {
