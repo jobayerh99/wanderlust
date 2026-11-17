@@ -14,6 +14,7 @@ const MyBookingsPage = async () => {
 
     const user = session?.user;
     const bookings = await getBookings(user?.email);
+    console.log(bookings);
 
     return (
         <main className="flex flex-1 flex-col px-4 py-10 md:px-8 md:py-14">

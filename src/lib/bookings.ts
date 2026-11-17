@@ -1,3 +1,5 @@
+import { getTokenFromServer } from "./getTokenFromServer";
+
 export type Booking = {
   _id: string;
   destinationName: string;
@@ -21,13 +23,20 @@ export async function getBookings(email?: string): Promise<Booking[]> {
   if (!email) return [];
 
   try {
+    const token = await getTokenFromServer()
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/my-bookings/${encodeURIComponent(email)}`,
-      { cache: "no-store" },
+      { cache: "no-store", 
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+      },
     );
     if (!res.ok) return [];
 
     const data: unknown = await res.json();
+
+    console.log(data);
     // Supports either a bare array or an { data: [...] } envelope.
     if (Array.isArray(data)) return data as Booking[];
     if (
