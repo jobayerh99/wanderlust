@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster, toast } from "@/components/ui/toast";
+import { authClient } from "@/lib/auth-client";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 type FormState = {
   destinationName: string;
@@ -164,11 +166,14 @@ const AddDestinationPage = () => {
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    const token = await getTokenFromClient()
+
     try {
       const res = await fetch("http://localhost:8000/add-destination", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${token}`
         },
         body: JSON.stringify(form),
       });

@@ -14,25 +14,32 @@ import {
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
-const DeleteDestinationDialog = ({id} : {id:string}) => {
+const DeleteDestinationDialog = ({ id }: { id: string }) => {
     const router = useRouter();
 
     const handleDeleteDestination = async () => {
+
+        const token = await getTokenFromClient()
+
         const res = await fetch(`http://localhost:8000/destination/${id}`, {
             method: 'DELETE',
+            headers: {
+                authorization: `Bearer ${token}`
+            }
         })
         await res.json()
         router.push('/destinations');
-            router.refresh();
+        router.refresh();
     }
 
     return (
         <AlertDialog>
             <AlertDialogTrigger render={<Button variant="outline"
-            className={"border-destructive/30 bg-background text-destructive hover:bg-destructive/50"}
+                className={"border-destructive/30 bg-background text-destructive hover:bg-destructive/50"}
             />}>
-                <Trash2/>
+                <Trash2 />
                 Delete
             </AlertDialogTrigger>
             <AlertDialogContent>

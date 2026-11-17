@@ -20,6 +20,7 @@ import type { Booking } from "@/lib/bookings";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 type StatusMeta = {
   label: string;
@@ -112,6 +113,9 @@ export function BookingCard({ booking, onCancel }: BookingCardProps) {
 
   /* Cancel Booking */
   const handleCancelBooking = async () => {
+
+    const token = await getTokenFromServer()
+
     try {
       setIsCancelling(true);
 
@@ -119,6 +123,9 @@ export function BookingCard({ booking, onCancel }: BookingCardProps) {
         `http://localhost:8000/mybookings/${booking._id}`,
         {
           method: "DELETE",
+          headers: {
+            authorization: `Bearer ${token}`
+          }
         }
       );
 

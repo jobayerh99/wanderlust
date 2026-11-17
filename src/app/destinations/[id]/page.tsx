@@ -16,6 +16,7 @@ import DeleteDestinationDialog from "@/components/destination/DeleteDestinationD
 import BookingPage from "@/components/booking/page";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { getTokenFromServer } from "@/lib/getTokenFromServer";
 
 interface Destination {
   _id: string;
@@ -35,11 +36,7 @@ const DestinationDetails = async ({
   id: string;
 }) => {
 
-  const jwtToken = await auth.api.getToken({
-    headers: await headers()
-  })
-
-  const token = jwtToken?.token
+  const token = await getTokenFromServer()
 
   const res = await fetch(
     `http://localhost:8000/destination/${id}`,
